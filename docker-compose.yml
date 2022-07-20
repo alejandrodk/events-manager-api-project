@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  # nginx:
+  #   container_name: api-nginx
+  #   image: nginx:1.13
+  #   restart: always
+  #   ports:
+  #     - 8091:80
+  #     - 9443:443
+  #   volumes:
+  #     - ./etc/nginx/conf.d:/etc/nginx/conf.d
+  #   depends_on:
+  #     - app
+
+  # app:
+  #   restart: always
+  #   build: ./app
+  #   working_dir: /app
+  #   env_file:
+  #     - ./app/.env
+  #   volumes:
+  #     - ./app:/app
+  #   expose:
+  #     - 8080
+  #   command:
+  #     - mvn clean spring-boot:run
+
+  # redis:
+  #   image: redis:alpine
+  #   ports:
+  #     - 6379:6379
+  
+  postgres:
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: events_api
+   # volumes:
+   #     - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
+   #     - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
+
+  # mongo:
+  #   image: mongo:3.7
+  #   container_name: mongo
+  #   restart: always
+  #   environment:
+  #     MONGO_INITDB_ROOT_USERNAME: root
+  #     MONGO_INITDB_ROOT_PASSWORD: root
+  #     MONGO_INITDB_DATABASE: events_api
+  #   ports:
+  #     - 27017:27017
+  #   mem_limit: 4G

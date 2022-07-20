@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate.naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+    #hibernate.ddl-auto: create
+    database: POSTGRESQL
+    show-sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/events_api
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+    validationQuery: SELECT 1
+    testWhileIdle: true
+
