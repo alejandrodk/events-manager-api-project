@@ -33,6 +33,7 @@ services:
   
   postgres:
     image: postgres:latest
+    container_name: postgres
     ports:
       - 5432:5432
     environment:
@@ -54,3 +55,13 @@ services:
   #   ports:
   #     - 27017:27017
   #   mem_limit: 4G
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    ports:
+      - 5050:80
+    environment:
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
