@@ -17,10 +17,9 @@ public class RoomsService {
     }
 
     public RoomsEntity update(RoomsEntity room) {
-        Boolean exist = this.repository.existsById(room.getId());
-        if (exist.equals(true)) {
-           throw new RuntimeException("Room not found");
-        }
+        boolean exists = this.repository.existsById(room.getId());
+        if (!exists) throw new RuntimeException("Room not found");
+
         return this.repository.save(room);
     }
 
