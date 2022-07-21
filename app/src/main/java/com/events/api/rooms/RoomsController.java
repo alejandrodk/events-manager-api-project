@@ -1,12 +1,18 @@
 package com.events.api.rooms;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.events.api.utils.ModelMapperUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController()
 public class RoomsController {
+
+    private final RoomsService service;
+
+    public RoomsController(RoomsService service) {
+        this.service = service;
+    }
 
     @GetMapping("/rooms/ping")
     public String ping() {
@@ -14,17 +20,19 @@ public class RoomsController {
     }
 
     @PostMapping("/rooms")
-    public String create() {
-        return "created";
+    public RoomsEntity create(@RequestBody RoomsEntity dto) {
+        RoomsEntity room = ModelMapperUtils.mapToClass(dto, RoomsEntity.class);
+        return this.service.create(room);
     }
 
     @PutMapping("/rooms/{room}")
-    public String update() {
-        return "updated";
+    public RoomsEntity update(@RequestBody RoomsEntity dto) {
+        RoomsEntity room = ModelMapperUtils.mapToClass(dto, RoomsEntity.class);
+        return this.service.update(room);
     }
 
     @GetMapping("/rooms")
-    public String rooms() {
-        return "rooms";
+    public List<RoomsEntity> rooms() {
+        return this.service.list();
     }
 }
