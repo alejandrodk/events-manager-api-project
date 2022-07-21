@@ -3,6 +3,7 @@ package com.events.api.events;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "events")
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public class EventsEntity {
     @Id

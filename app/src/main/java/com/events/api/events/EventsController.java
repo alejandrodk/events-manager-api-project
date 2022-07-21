@@ -1,12 +1,19 @@
 package com.events.api.events;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.events.api.utils.ModelMapperUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @RestController()
 public class EventsController {
+
+    private final EventsService service;
+
+    public EventsController(EventsService service) {
+        this.service = service;
+    }
 
     @GetMapping("/events/ping")
     public String ping() {
@@ -14,18 +21,19 @@ public class EventsController {
     }
 
     @PostMapping("/events")
-    public String create() {
-        return "created";
+    public EventsEntity create(@RequestBody EventsEntity dto) {
+        EventsEntity entity = ModelMapperUtils.mapToClass(dto, EventsEntity.class);
+        return this.service.create(entity);
     }
 
     @PutMapping("/events/{event}")
-    public String update() {
-        return "updated";
+    public EventsEntity update(@PathVariable("event") @NotNull int event) {
+        return this.service.get(event);
     }
 
     @GetMapping("/events")
-    public String list() {
-        return "list";
+    public List<EventsEntity> list() {
+        return this.service.list();
     }
 
     @PostMapping("/batch/events")
