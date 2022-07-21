@@ -1,5 +1,6 @@
 package com.events.api.events;
 
+import com.events.api.rooms.RoomsEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,8 +22,8 @@ public class EventsEntity {
     private Integer id;
     @Column
     private String name;
-    @Column
-    private String room;
+    @Column()
+    private Integer room;
     @Column
     private BigDecimal price;
     @Column(name = "date_from")
