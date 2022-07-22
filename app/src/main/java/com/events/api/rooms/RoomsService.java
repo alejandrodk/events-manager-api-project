@@ -3,9 +3,7 @@ package com.events.api.rooms;
 import com.events.api.events.EventsEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +34,26 @@ public class RoomsService {
         return this.repository.findById(id);
     }
 
-    public static boolean validateAvailability(EventsEntity event, RoomsEntity room) {
+    public boolean validateAvailability(EventsEntity event, RoomsEntity room, List<EventsEntity> currentRoomEvents) {
         LocalTime from = event.getFrom().toLocalTime();
         LocalTime to = event.getTo().toLocalTime();
 
         LocalTime open = room.getOpen().toLocalTime();
         LocalTime close = room.getClose().toLocalTime();
 
-        return from.isAfter(open) && to.isBefore(close);
+        List<EventsEntity> currentRoomEventsWithSameDate = currentRoomEvents.stream()
+                .filter(ev ->
+                        ev.getFrom().getYear() == event.getFrom().getYear() &&
+                        ev.getFrom().getMonthValue() == event.getFrom().getMonthValue() &&
+                        ev.getFrom().getDayOfMonth() == event.getFrom().getDayOfMonth()
+                )
+                .filter(ev ->
+                        !event.getFrom().isAfter(ev.getTo()) ||
+                        event.getFrom().equals(ev.getFrom())
+                ).toList();
+
+        if (currentRoomEventsWithSameDate.size() > 0) return false;
+
+        return (from.isAfter(open) || from.equals(open)) && (to.isBefore(close) || to.equals(close));
     }
 }

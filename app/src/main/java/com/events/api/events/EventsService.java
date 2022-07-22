@@ -20,22 +20,26 @@ public class EventsService {
     public EventsEntity create(EventsEntity event) {
         RoomsEntity room = this.getEventRoom(event.getRoom())
                 .orElseThrow(() -> new RuntimeException("Room not found"));
+        List<EventsEntity> currentRoomEvents = this.listByRoom(event.getRoom());
 
-        boolean available = RoomsService.validateAvailability(event, room);
+        boolean available = this.roomsService.validateAvailability(event, room, currentRoomEvents);
 
         if (!available) throw new RuntimeException("Room is not available");
 
         return this.repository.save(event);
     }
 
-    public List<EventsEntity> list() {
-        return this.repository.findAll();
-    }
-
     public Optional<EventsEntity> get(int event) {
         return this.repository.findById(event);
     }
 
+    public List<EventsEntity> list() {
+        return this.repository.findAll();
+    }
+
+    public List<EventsEntity> listByRoom(int room) {
+        return this.repository.findByRoom(room);
+    }
     public Optional<RoomsEntity> getEventRoom(int roomId) {
         return this.roomsService.get(roomId);
     }
