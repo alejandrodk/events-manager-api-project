@@ -2,11 +2,13 @@ package com.events.api.events;
 
 import com.events.api.rooms.RoomsEntity;
 import com.events.api.rooms.RoomsService;
+import com.events.api.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 @Service
 public class EventsService {
@@ -34,11 +36,9 @@ public class EventsService {
         return this.repository.findById(event);
     }
 
-    public List<EventsEntity> list() {
-        LocalDateTime now = LocalDateTime.now();
-
+    public List<EventsEntity> list(String date) {
         return this.repository.findAll().stream()
-                .filter(event -> event.getFrom().isAfter(now) || event.getFrom().equals(now))
+                .filter(this.getFilterByParam(date))
                 .toList();
     }
 
@@ -47,5 +47,23 @@ public class EventsService {
     }
     public Optional<RoomsEntity> getEventRoom(int roomId) {
         return this.roomsService.get(roomId);
+    }
+
+    private Predicate<EventsEntity> getFilterByParam(String date) {
+        LocalDateTime now = LocalDateTime.now();
+
+        if (date.length() > 8) throw new RuntimeException("invalid date value");
+
+        if (date.length() == 8 && !date.equals("tomorrow") && Integer.parseInt(date) > 0) {
+            LocalDateTime parsedDate = DateUtils.dateParamToTime(date);
+            return event -> event.getFrom().getDayOfYear() == parsedDate.getDayOfYear();
+        }
+
+        return switch (date) {
+            case "today" -> event -> event.getFrom().getDayOfYear() == now.getDayOfYear();
+            case "tomorrow" -> event -> event.getFrom().getDayOfYear() == now.plusDays(1).getDayOfYear();
+            case "past" -> event -> event.getTo().isBefore(now);
+            default -> event -> event.getFrom().isAfter(now) || event.getFrom().equals(now);
+        };
     }
 }

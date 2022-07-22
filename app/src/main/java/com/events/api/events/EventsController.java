@@ -4,7 +4,10 @@ import com.events.api.utils.ModelMapperUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController()
 public class EventsController {
@@ -32,8 +35,8 @@ public class EventsController {
     }
 
     @GetMapping("/events")
-    public List<EventsEntity> list() {
-        return this.service.list();
+    public List<EventsEntity> list(@RequestParam(value = "date") Optional<String> date) {
+        return this.service.list(date.orElse(""));
     }
 
     @PostMapping("/batch/events")

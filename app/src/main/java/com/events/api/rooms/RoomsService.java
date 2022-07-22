@@ -42,15 +42,9 @@ public class RoomsService {
         LocalTime close = room.getClose().toLocalTime();
 
         List<EventsEntity> currentRoomEventsWithSameDate = currentRoomEvents.stream()
-                .filter(ev ->
-                        ev.getFrom().getYear() == event.getFrom().getYear() &&
-                        ev.getFrom().getMonthValue() == event.getFrom().getMonthValue() &&
-                        ev.getFrom().getDayOfMonth() == event.getFrom().getDayOfMonth()
-                )
-                .filter(ev ->
-                        !event.getFrom().isAfter(ev.getTo()) ||
-                        event.getFrom().equals(ev.getFrom())
-                ).toList();
+                .filter(ev -> ev.getFrom().getDayOfYear() == event.getFrom().getDayOfYear())
+                .filter(ev -> !event.getFrom().isAfter(ev.getTo()) || event.getFrom().equals(ev.getFrom()))
+                .toList();
 
         if (currentRoomEventsWithSameDate.size() > 0) return false;
 
