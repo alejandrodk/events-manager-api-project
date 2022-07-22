@@ -4,6 +4,7 @@ import com.events.api.rooms.RoomsEntity;
 import com.events.api.rooms.RoomsService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,7 +35,11 @@ public class EventsService {
     }
 
     public List<EventsEntity> list() {
-        return this.repository.findAll();
+        LocalDateTime now = LocalDateTime.now();
+
+        return this.repository.findAll().stream()
+                .filter(event -> event.getFrom().isAfter(now) || event.getFrom().equals(now))
+                .toList();
     }
 
     public List<EventsEntity> listByRoom(int room) {
