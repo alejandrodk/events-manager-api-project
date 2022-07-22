@@ -2,6 +2,7 @@ package com.events.api.tickets;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class TicketsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,5 +22,5 @@ public class TicketsEntity {
     @Column
     private int client;
     @Column
-    private Boolean cancelled;
+    private Boolean cancelled = false;
 }
