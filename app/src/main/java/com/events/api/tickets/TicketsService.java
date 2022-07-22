@@ -3,6 +3,8 @@ package com.events.api.tickets;
 import com.events.api.events.EventsEntity;
 import com.events.api.events.EventsService;
 import com.events.api.rooms.RoomsEntity;
+import com.events.api.users.UsersEntity;
+import com.events.api.users.UsersService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -12,10 +14,12 @@ import java.util.List;
 public class TicketsService {
     private final TicketsRepository repository;
     private final EventsService eventsService;
+    private final UsersService usersService;
 
-    public TicketsService(TicketsRepository repository, EventsService eventsService) {
+    public TicketsService(TicketsRepository repository, EventsService eventsService, UsersService usersService) {
         this.repository = repository;
         this.eventsService = eventsService;
+        this.usersService = usersService;
     }
 
     public TicketsEntity create(TicketsEntity ticket) {
@@ -42,10 +46,18 @@ public class TicketsService {
         RoomsEntity room = this.eventsService.getEventRoom(event.getRoom())
                 .orElseThrow(() -> new RuntimeException("Room not found"));
 
-        long currentTickets = this.repository.countByEventIdAndCancelledFalse(event.getId());
+        UsersEntity user = this.usersService.get(ticket.getClient())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (currentTickets == room.getAvailability()) {
+        long purchasedTickets = this.repository.countByEventIdAndCancelledFalse(event.getId());
+        long currentUserTickets = this.repository.countByClient(user.getId());
+
+        if (purchasedTickets == room.getAvailability()) {
             throw new RuntimeException("room not available");
+        }
+
+        if (currentUserTickets > 0) {
+            throw new RuntimeException("User already has a ticket");
         }
 
         LocalDateTime now = LocalDateTime.now();

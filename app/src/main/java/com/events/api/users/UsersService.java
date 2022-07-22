@@ -19,4 +19,8 @@ public class UsersService {
 
         return this.repository.save(user);
     }
+
+    public Optional<UsersEntity> get(int id) {
+        return this.repository.findById(id);
+    }
 }
