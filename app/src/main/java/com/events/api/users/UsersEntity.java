@@ -2,6 +2,7 @@ package com.events.api.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Table(name = "users")
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class UsersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +26,5 @@ public class UsersEntity {
     @Column
     private String password;
     @Column
-    private String role;
+    private String role = "user";
 }
