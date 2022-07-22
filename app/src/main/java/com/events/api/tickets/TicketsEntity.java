@@ -15,12 +15,10 @@ public class TicketsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name = "event_name")
-    private String eventName;
     @Column(name = "event_id")
-    private String eventId;
+    private int eventId;
     @Column
-    private String client;
+    private int client;
     @Column
     private Boolean cancelled;
 }

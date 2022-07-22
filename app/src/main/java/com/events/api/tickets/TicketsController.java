@@ -19,6 +19,7 @@ public class TicketsController {
 
     @PostMapping("/tickets/buy")
     public TicketsEntity buy(@RequestBody TicketsEntity dto) {
+        this.service.validateAvailability(dto);
         return this.service.create(dto);
     }
 

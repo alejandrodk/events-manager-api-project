@@ -5,6 +5,7 @@ import com.events.api.rooms.RoomsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EventsService {
@@ -17,7 +18,7 @@ public class EventsService {
     }
 
     public EventsEntity create(EventsEntity event) {
-        RoomsEntity room = this.roomsService.get(event.getRoom())
+        RoomsEntity room = this.getEventRoom(event.getRoom())
                 .orElseThrow(() -> new RuntimeException("Room not found"));
 
         boolean available = RoomsService.validateAvailability(event, room);
@@ -31,7 +32,11 @@ public class EventsService {
         return this.repository.findAll();
     }
 
-    public EventsEntity get(int event) {
-        return this.repository.findById(event).orElse(null);
+    public Optional<EventsEntity> get(int event) {
+        return this.repository.findById(event);
+    }
+
+    public Optional<RoomsEntity> getEventRoom(int roomId) {
+        return this.roomsService.get(roomId);
     }
 }
