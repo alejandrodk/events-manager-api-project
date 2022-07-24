@@ -46,6 +46,10 @@ public class EventsService {
                 .toList();
     }
 
+    public List<EventsEntity> findBetweenDates(LocalDateTime from, LocalDateTime to) {
+        return this.repository.findBetweenDates(from, to);
+    }
+
     public List<EventsEntity> listByRoom(int room) {
         return this.repository.findByRoom(room);
     }
