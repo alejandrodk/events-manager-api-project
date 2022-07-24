@@ -3,15 +3,18 @@ package com.events.api.events.dtos;
 import com.events.api.events.EventsEntity;
 import com.events.api.rooms.RoomsEntity;
 import com.events.api.tickets.TicketsEntity;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventDTO {
     private int id;
     private String name;
@@ -20,8 +23,8 @@ public class EventDTO {
     private int totalTickets;
     private int soldTickets;
     private int availableTickets;
-    private LocalDateTime from;
-    private LocalDateTime to;
+    private String from;
+    private String to;
 
     public static EventDTO fromEntity(
             EventsEntity event,
@@ -39,8 +42,8 @@ public class EventDTO {
                 .totalTickets(room.getAvailability())
                 .soldTickets(sold)
                 .availableTickets(room.getAvailability() - sold)
-                .from(event.getFrom())
-                .to(event.getTo())
+                .from(event.getFrom().toString())
+                .to(event.getTo().toString())
                 .build();
     }
 }

@@ -14,10 +14,12 @@ import java.util.function.Predicate;
 public class EventsService {
     private final EventsRepository repository;
     private final RoomsService roomsService;
+    private final EventsCache cache;
 
-    public EventsService(EventsRepository repository, RoomsService roomsService) {
+    public EventsService(EventsRepository repository, RoomsService roomsService, EventsCache cache) {
         this.repository = repository;
         this.roomsService = roomsService;
+        this.cache = cache;
     }
 
     public EventsEntity create(EventsEntity event) {
@@ -28,11 +30,13 @@ public class EventsService {
         boolean available = this.roomsService.validateAvailability(event, room, currentRoomEvents);
 
         if (!available) throw new RuntimeException("Room is not available");
-
-        return this.repository.save(event);
+        EventsEntity result = this.repository.save(event);
+        return this.cache.populate(result);
     }
 
     public Optional<EventsEntity> get(int event) {
+        EventsEntity cached = this.cache.get(event);
+        if (cached != null) return Optional.of(cached);
         return this.repository.findById(event);
     }
 

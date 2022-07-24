@@ -12,4 +12,8 @@ public enum DateUtils {
 
         return LocalDateTime.of(year, month, day, 0, 0, 0);
     }
+
+    public static boolean dateIsToday(LocalDateTime date) {
+        return LocalDateTime.now().getDayOfYear() == date.getDayOfYear();
+    }
 }

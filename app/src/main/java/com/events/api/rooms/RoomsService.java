@@ -10,20 +10,24 @@ import java.util.Optional;
 @Service
 public class RoomsService {
     private final RoomsRepository repository;
+    private final RoomsCache cache;
 
-    public RoomsService(RoomsRepository repository) {
+    public RoomsService(RoomsRepository repository, RoomsCache cache) {
         this.repository = repository;
+        this.cache = cache;
     }
 
     public RoomsEntity create(RoomsEntity room) {
-        return this.repository.save(room);
+        RoomsEntity result = this.repository.save(room);
+        return this.cache.populate(result);
     }
 
     public RoomsEntity update(RoomsEntity room) {
         boolean exists = this.repository.existsById(room.getId());
         if (!exists) throw new RuntimeException("Room not found");
+        RoomsEntity result = this.repository.save(room);
 
-        return this.repository.save(room);
+        return this.cache.populate(result);
     }
 
     public List<RoomsEntity> list() {
@@ -31,6 +35,8 @@ public class RoomsService {
     }
 
     public Optional<RoomsEntity> get(int id) {
+        RoomsEntity cached = this.cache.get(id);
+        if (cached != null) return Optional.of(cached);
         return this.repository.findById(id);
     }
 

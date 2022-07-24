@@ -5,6 +5,7 @@ import com.events.api.rooms.RoomsEntity;
 import com.events.api.rooms.RoomsService;
 import com.events.api.tickets.TicketsEntity;
 import com.events.api.tickets.TicketsService;
+import com.events.api.utils.DateUtils;
 import com.events.api.utils.ModelMapperUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,6 @@ import java.util.Optional;
 
 @RestController()
 public class EventsController {
-
     private final EventsService service;
     private final TicketsService ticketsService;
     private final RoomsService roomsService;
