@@ -45,17 +45,16 @@ services:
    #     - ./init.sql:/docker-entrypoint-initdb.d/1-init.sql
    #     - ./data.sql:/docker-entrypoint-initdb.d/2-data.sql
 
-  # mongo:
-  #   image: mongo:3.7
-  #   container_name: mongo
-  #   restart: always
-  #   environment:
-  #     MONGO_INITDB_ROOT_USERNAME: root
-  #     MONGO_INITDB_ROOT_PASSWORD: root
-  #     MONGO_INITDB_DATABASE: events_api
-  #   ports:
-  #     - 27017:27017
-  #   mem_limit: 4G
+  mongo:
+    image: mongo:3.7
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: events_api
+    ports:
+      - 27018:27017
   
   pgadmin:
     image: dpage/pgadmin4
