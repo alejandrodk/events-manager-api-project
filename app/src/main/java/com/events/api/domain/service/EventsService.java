@@ -6,7 +6,7 @@ import com.events.api.data.repository.PastEventsRepository;
 import com.events.api.domain.gateway.EventGateway;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.model.PastEvent;
-import com.events.api.data.entity.RoomsEntity;
+import com.events.api.domain.model.Room;
 import com.events.api.domain.utils.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +30,7 @@ public class EventsService {
     }
 
     public Event create(Event event) {
-        RoomsEntity room = this.getEventRoom(event.getRoom())
+        Room room = this.getEventRoom(event.getRoom())
                 .orElseThrow(() -> new RuntimeException("Room not found"));
         List<Event> currentRoomEvents = this.listByRoom(event.getRoom());
 
@@ -66,7 +66,7 @@ public class EventsService {
     public List<Event> listByRoom(int room) {
         return this.eventGateway.listByRoom(room);
     }
-    public Optional<RoomsEntity> getEventRoom(int roomId) {
+    public Optional<Room> getEventRoom(int roomId) {
         return this.roomsService.get(roomId);
     }
 

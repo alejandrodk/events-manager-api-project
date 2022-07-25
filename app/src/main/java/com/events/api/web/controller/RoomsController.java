@@ -1,6 +1,6 @@
 package com.events.api.web.controller;
 
-import com.events.api.data.entity.RoomsEntity;
+import com.events.api.domain.model.Room;
 import com.events.api.domain.service.RoomsService;
 import com.events.api.domain.utils.ModelMapperUtils;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +22,19 @@ public class RoomsController {
     }
 
     @PostMapping("/rooms")
-    public RoomsEntity create(@RequestBody RoomsEntity dto) {
-        RoomsEntity room = ModelMapperUtils.mapToClass(dto, RoomsEntity.class);
+    public Room create(@RequestBody Room dto) {
+        Room room = ModelMapperUtils.mapToClass(dto, Room.class);
         return this.service.create(room);
     }
 
     @PutMapping("/rooms/{room}")
-    public RoomsEntity update(@RequestBody RoomsEntity dto) {
-        RoomsEntity room = ModelMapperUtils.mapToClass(dto, RoomsEntity.class);
+    public Room update(@RequestBody Room dto) {
+        Room room = ModelMapperUtils.mapToClass(dto, Room.class);
         return this.service.update(room);
     }
 
     @GetMapping("/rooms")
-    public List<RoomsEntity> rooms() {
+    public List<Room> rooms() {
         return this.service.list();
     }
 }

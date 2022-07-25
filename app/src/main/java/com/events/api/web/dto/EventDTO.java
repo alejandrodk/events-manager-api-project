@@ -4,6 +4,7 @@ import com.events.api.data.entity.RoomsEntity;
 import com.events.api.data.entity.TicketsEntity;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.model.PastEvent;
+import com.events.api.domain.model.Room;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class EventDTO {
 
     public static EventDTO fromEntity(
             Event event,
-            RoomsEntity room,
+            Room room,
             List<TicketsEntity> tickets
     ) {
         int sold = tickets.stream().

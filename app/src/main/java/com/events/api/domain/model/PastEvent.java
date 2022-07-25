@@ -27,7 +27,7 @@ public class PastEvent {
 
     public static PastEvent fromEntity(
             Event event,
-            RoomsEntity room,
+            Room room,
             List<TicketsEntity> tickets
     ) {
         int sold = tickets.stream().

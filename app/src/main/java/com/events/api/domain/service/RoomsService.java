@@ -1,10 +1,9 @@
 package com.events.api.domain.service;
 
 import com.events.api.data.cache.RoomsCache;
-import com.events.api.data.entity.EventsEntity;
-import com.events.api.data.entity.RoomsEntity;
-import com.events.api.data.repository.RoomsRepository;
+import com.events.api.domain.gateway.RoomGateway;
 import com.events.api.domain.model.Event;
+import com.events.api.domain.model.Room;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -13,38 +12,38 @@ import java.util.Optional;
 
 @Service
 public class RoomsService {
-    private final RoomsRepository repository;
+    private final RoomGateway roomGateway;
     private final RoomsCache cache;
 
-    public RoomsService(RoomsRepository repository, RoomsCache cache) {
-        this.repository = repository;
+    public RoomsService(RoomGateway roomGateway, RoomsCache cache) {
+        this.roomGateway = roomGateway;
         this.cache = cache;
     }
 
-    public RoomsEntity create(RoomsEntity room) {
-        RoomsEntity result = this.repository.save(room);
+    public Room create(Room room) {
+        Room result = this.roomGateway.save(room);
         return this.cache.populate(result);
     }
 
-    public RoomsEntity update(RoomsEntity room) {
-        boolean exists = this.repository.existsById(room.getId());
+    public Room update(Room room) {
+        boolean exists = this.roomGateway.exist(room.getId());
         if (!exists) throw new RuntimeException("Room not found");
-        RoomsEntity result = this.repository.save(room);
+        Room result = this.roomGateway.save(room);
 
         return this.cache.populate(result);
     }
 
-    public List<RoomsEntity> list() {
-        return this.repository.findAll();
+    public List<Room> list() {
+        return this.roomGateway.findAll();
     }
 
-    public Optional<RoomsEntity> get(int id) {
-        RoomsEntity cached = this.cache.get(id);
+    public Optional<Room> get(int id) {
+        Room cached = this.cache.get(id);
         if (cached != null) return Optional.of(cached);
-        return this.repository.findById(id);
+        return this.roomGateway.findById(id);
     }
 
-    public boolean validateAvailability(Event event, RoomsEntity room, List<Event> currentRoomEvents) {
+    public boolean validateAvailability(Event event, Room room, List<Event> currentRoomEvents) {
         LocalTime from = event.getFrom().toLocalTime();
         LocalTime to = event.getTo().toLocalTime();
 
