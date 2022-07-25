@@ -1,10 +1,10 @@
 package com.events.api.domain.service;
 
 import com.events.api.domain.model.Ticket;
-import com.events.api.data.entity.UsersEntity;
 import com.events.api.domain.gateway.TicketGateway;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.model.Room;
+import com.events.api.domain.model.User;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -46,7 +46,7 @@ public class TicketsService {
         Room room = this.eventsService.getEventRoom(event.getRoom())
                 .orElseThrow(() -> new RuntimeException("Room not found"));
 
-        UsersEntity user = this.usersService.get(ticket.getClient())
+        User user = this.usersService.get(ticket.getClient())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         long purchasedTickets = this.ticketGateway.countByEvent(event.getId());

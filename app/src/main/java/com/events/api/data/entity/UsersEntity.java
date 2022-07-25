@@ -1,14 +1,14 @@
 package com.events.api.data.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "users")
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsersEntity {
@@ -26,5 +26,5 @@ public class UsersEntity {
     @Column
     private String password;
     @Column
-    private String role = "user";
+    private String role = "client";
 }

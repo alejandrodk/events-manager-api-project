@@ -1,6 +1,6 @@
 package com.events.api.web.controller;
 
-import com.events.api.data.entity.UsersEntity;
+import com.events.api.domain.model.User;
 import com.events.api.domain.service.UsersService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +22,7 @@ public class UsersController {
     }
 
     @PostMapping("/users")
-    public UsersEntity create(@RequestBody UsersEntity dto) {
+    public User create(@RequestBody User dto) {
         return this.service.create(dto);
     }
 }

@@ -1,28 +1,28 @@
 package com.events.api.domain.service;
 
-import com.events.api.data.entity.UsersEntity;
-import com.events.api.data.repository.UsersRepository;
+import com.events.api.domain.gateway.UserGateway;
+import com.events.api.domain.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
 public class UsersService {
-    private final UsersRepository repository;
+    private final UserGateway userGateway;
 
-    public UsersService(UsersRepository repository) {
-        this.repository = repository;
+    public UsersService(UserGateway userGateway) {
+        this.userGateway = userGateway;
     }
 
-    public UsersEntity create(UsersEntity user) {
-        Optional<UsersEntity> exists = this.repository.findOneByDniOrEmail(user.getDni(), user.getEmail());
+    public User create(User user) {
+        Optional<User> exists = this.userGateway.findByDniOrEmail(user.getDni(), user.getEmail());
 
         if (exists.isPresent()) throw new RuntimeException("user already exists");
 
-        return this.repository.save(user);
+        return this.userGateway.save(user);
     }
 
-    public Optional<UsersEntity> get(int id) {
-        return this.repository.findById(id);
+    public Optional<User> get(int id) {
+        return this.userGateway.findById(id);
     }
 }
