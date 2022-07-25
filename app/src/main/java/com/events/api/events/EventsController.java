@@ -1,11 +1,11 @@
 package com.events.api.events;
 
 import com.events.api.events.dtos.EventDTO;
+import com.events.api.events.dtos.PastEventDTO;
 import com.events.api.rooms.RoomsEntity;
 import com.events.api.rooms.RoomsService;
 import com.events.api.tickets.TicketsEntity;
 import com.events.api.tickets.TicketsService;
-import com.events.api.utils.DateUtils;
 import com.events.api.utils.ModelMapperUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +18,7 @@ public class EventsController {
     private final EventsService service;
     private final TicketsService ticketsService;
     private final RoomsService roomsService;
+
 
     public EventsController(EventsService service, TicketsService ticketsService, RoomsService roomsService) {
         this.service = service;
@@ -43,6 +44,9 @@ public class EventsController {
 
     @GetMapping("/events")
     public List<EventDTO> list(@RequestParam(value = "date") Optional<String> date) {
+        if (date.isPresent() && date.get().equals("past")) {
+            return this.service.getPastEvents().stream().map(EventDTO::fromPastEvent).toList();
+        }
         List<EventsEntity> result = this.service.list(date.orElse(""));
         return result.stream().map(event -> {
             RoomsEntity room = this.roomsService.get(event.getRoom()).get();
@@ -53,7 +57,14 @@ public class EventsController {
     }
 
     @PostMapping("/batch/events")
-    public String batch() {
-        return "batch";
+    public List<PastEventDTO> batch() {
+        List<EventsEntity> events = this.service.list("past");
+        List<PastEventDTO> pastEvents = events.stream().map(event -> {
+            RoomsEntity room = this.roomsService.get(event.getRoom()).get();
+            List<TicketsEntity> tickets = this.ticketsService.findByEvent(event.getId());
+            return PastEventDTO.fromEntity(event, room, tickets);
+        }).toList();
+
+        return this.service.savePastEvents(pastEvents);
     }
 }

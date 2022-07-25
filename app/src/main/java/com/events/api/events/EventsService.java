@@ -1,5 +1,6 @@
 package com.events.api.events;
 
+import com.events.api.events.dtos.PastEventDTO;
 import com.events.api.rooms.RoomsEntity;
 import com.events.api.rooms.RoomsService;
 import com.events.api.utils.DateUtils;
@@ -13,11 +14,13 @@ import java.util.function.Predicate;
 @Service
 public class EventsService {
     private final EventsRepository repository;
+    private final PastEventsRepository pastEventsRepository;
     private final RoomsService roomsService;
     private final EventsCache cache;
 
-    public EventsService(EventsRepository repository, RoomsService roomsService, EventsCache cache) {
+    public EventsService(EventsRepository repository, PastEventsRepository pastEventsRepository, RoomsService roomsService, EventsCache cache) {
         this.repository = repository;
+        this.pastEventsRepository = pastEventsRepository;
         this.roomsService = roomsService;
         this.cache = cache;
     }
@@ -32,6 +35,14 @@ public class EventsService {
         if (!available) throw new RuntimeException("Room is not available");
         EventsEntity result = this.repository.save(event);
         return this.cache.populate(result);
+    }
+
+    public List<PastEventDTO> savePastEvents(List<PastEventDTO> events) {
+        return this.pastEventsRepository.saveAll(events);
+    }
+
+    public List<PastEventDTO> getPastEvents() {
+        return this.pastEventsRepository.findAll();
     }
 
     public Optional<EventsEntity> get(int event) {
@@ -70,8 +81,7 @@ public class EventsService {
         return switch (date) {
             case "today" -> event -> event.getFrom().getDayOfYear() == now.getDayOfYear();
             case "tomorrow" -> event -> event.getFrom().getDayOfYear() == now.plusDays(1).getDayOfYear();
-            case "past" -> event -> event.getTo().isBefore(now);
-            default -> event -> event.getFrom().isAfter(now) || event.getFrom().equals(now);
+            default -> event -> event.getFrom().isAfter(now.withHour(0).withMinute(0).withSecond(1));
         };
     }
 }

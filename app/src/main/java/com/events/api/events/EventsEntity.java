@@ -1,6 +1,5 @@
 package com.events.api.events;
 
-import com.events.api.rooms.RoomsEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

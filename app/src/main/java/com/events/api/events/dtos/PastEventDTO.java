@@ -7,15 +7,20 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Data
+@Document("events")
 @Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventDTO {
+public class PastEventDTO {
+    @Id
+    private String _id;
     private int id;
     private String name;
     private String room;
@@ -26,7 +31,7 @@ public class EventDTO {
     private String from;
     private String to;
 
-    public static EventDTO fromEntity(
+    public static PastEventDTO fromEntity(
             EventsEntity event,
             RoomsEntity room,
             List<TicketsEntity> tickets
@@ -34,7 +39,7 @@ public class EventDTO {
         int sold = tickets.stream().
                 filter(ticket -> !ticket.getCancelled()).toList().size();
 
-        return EventDTO.builder()
+        return PastEventDTO.builder()
                 .id(event.getId())
                 .name(event.getName())
                 .room(room.getName())
@@ -44,20 +49,6 @@ public class EventDTO {
                 .availableTickets(room.getAvailability() - sold)
                 .from(event.getFrom().toString())
                 .to(event.getTo().toString())
-                .build();
-    }
-
-    public static EventDTO fromPastEvent(PastEventDTO event) {
-        return EventDTO.builder()
-                .id(event.getId())
-                .name(event.getName())
-                .room(event.getRoom())
-                .price(event.getPrice())
-                .totalTickets(event.getTotalTickets())
-                .soldTickets(event.getSoldTickets())
-                .availableTickets(event.getAvailableTickets())
-                .from(event.getFrom())
-                .to(event.getTo())
                 .build();
     }
 }
