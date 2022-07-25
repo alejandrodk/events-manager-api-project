@@ -1,6 +1,6 @@
 package com.events.api.web.controller;
 
-import com.events.api.data.entity.TicketsEntity;
+import com.events.api.domain.model.Ticket;
 import com.events.api.domain.service.TicketsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,13 +20,13 @@ public class TicketsController {
     }
 
     @PostMapping("/tickets/buy")
-    public TicketsEntity buy(@RequestBody TicketsEntity dto) {
+    public Ticket buy(@RequestBody Ticket dto) {
         this.service.validateAvailability(dto);
         return this.service.create(dto);
     }
 
     @PostMapping("/tickets/{ticket}/cancel")
-    public TicketsEntity cancel(@PathVariable("ticket") @NotNull int ticket) {
+    public Ticket cancel(@PathVariable("ticket") @NotNull int ticket) {
         return this.service.cancel(ticket);
     }
 }

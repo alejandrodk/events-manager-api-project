@@ -1,7 +1,5 @@
 package com.events.api.domain.model;
 
-import com.events.api.data.entity.RoomsEntity;
-import com.events.api.data.entity.TicketsEntity;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -28,7 +26,7 @@ public class PastEvent {
     public static PastEvent fromEntity(
             Event event,
             Room room,
-            List<TicketsEntity> tickets
+            List<Ticket> tickets
     ) {
         int sold = tickets.stream().
                 filter(ticket -> !ticket.getCancelled()).toList().size();

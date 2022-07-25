@@ -1,10 +1,9 @@
 package com.events.api.web.dto;
 
-import com.events.api.data.entity.RoomsEntity;
-import com.events.api.data.entity.TicketsEntity;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.model.PastEvent;
 import com.events.api.domain.model.Room;
+import com.events.api.domain.model.Ticket;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,7 +30,7 @@ public class EventDTO {
     public static EventDTO fromEntity(
             Event event,
             Room room,
-            List<TicketsEntity> tickets
+            List<Ticket> tickets
     ) {
         int sold = tickets.stream().
                 filter(ticket -> !ticket.getCancelled()).toList().size();

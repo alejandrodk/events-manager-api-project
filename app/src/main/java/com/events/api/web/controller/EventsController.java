@@ -4,11 +4,11 @@ import com.events.api.data.entity.EventsEntity;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.model.PastEvent;
 import com.events.api.domain.model.Room;
+import com.events.api.domain.model.Ticket;
 import com.events.api.domain.service.EventsService;
 import com.events.api.web.dto.EventDTO;
 import com.events.api.web.dto.PastEventDTO;
 import com.events.api.domain.service.RoomsService;
-import com.events.api.data.entity.TicketsEntity;
 import com.events.api.domain.service.TicketsService;
 import com.events.api.domain.utils.ModelMapperUtils;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +54,7 @@ public class EventsController {
         List<Event> result = this.service.list(date.orElse(""));
         return result.stream().map(event -> {
             Room room = this.roomsService.get(event.getRoom()).get();
-            List<TicketsEntity> tickets = this.ticketsService.findByEvent(event.getId());
+            List<Ticket> tickets = this.ticketsService.findByEvent(event.getId());
 
             return EventDTO.fromEntity(event, room, tickets);
         }).toList();
@@ -65,7 +65,7 @@ public class EventsController {
         List<Event> events = this.service.list("past");
         List<PastEvent> pastEvents = events.stream().map(event -> {
             Room room = this.roomsService.get(event.getRoom()).get();
-            List<TicketsEntity> tickets = this.ticketsService.findByEvent(event.getId());
+            List<Ticket> tickets = this.ticketsService.findByEvent(event.getId());
             return PastEvent.fromEntity(event, room, tickets);
         }).toList();
 
