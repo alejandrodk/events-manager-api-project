@@ -27,7 +27,7 @@ public class RoomsController {
         return this.service.create(room);
     }
 
-    @PutMapping("/rooms/{room}")
+    @PutMapping("/rooms")
     public Room update(@RequestBody Room dto) {
         Room room = ModelMapperUtils.mapToClass(dto, Room.class);
         return this.service.update(room);
@@ -36,5 +36,10 @@ public class RoomsController {
     @GetMapping("/rooms")
     public List<Room> rooms() {
         return this.service.list();
+    }
+
+    @GetMapping("/rooms/{room}")
+    public Room room(@PathVariable("room") int room) {
+        return this.service.get(room).get();
     }
 }
