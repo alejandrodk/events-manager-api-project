@@ -1,6 +1,6 @@
 package com.events.api.data.cache;
 
-import com.events.api.data.entity.EventsEntity;
+import com.events.api.domain.model.Event;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,12 +16,12 @@ public class EventsCache {
     }
 
     @Cacheable(cacheNames = cacheCollection, key = "#id")
-    public EventsEntity get(int id) {
+    public Event get(int id) {
         return null;
     }
 
     @CachePut(cacheNames = cacheCollection, key = "#dto.id")
-    public EventsEntity populate(EventsEntity dto) {
+    public Event populate(Event dto) {
         return dto;
     }
 }

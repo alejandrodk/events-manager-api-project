@@ -4,6 +4,7 @@ import com.events.api.data.cache.RoomsCache;
 import com.events.api.data.entity.EventsEntity;
 import com.events.api.data.entity.RoomsEntity;
 import com.events.api.data.repository.RoomsRepository;
+import com.events.api.domain.model.Event;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -43,14 +44,14 @@ public class RoomsService {
         return this.repository.findById(id);
     }
 
-    public boolean validateAvailability(EventsEntity event, RoomsEntity room, List<EventsEntity> currentRoomEvents) {
+    public boolean validateAvailability(Event event, RoomsEntity room, List<Event> currentRoomEvents) {
         LocalTime from = event.getFrom().toLocalTime();
         LocalTime to = event.getTo().toLocalTime();
 
         LocalTime open = room.getOpen().toLocalTime();
         LocalTime close = room.getClose().toLocalTime();
 
-        List<EventsEntity> currentRoomEventsWithSameDate = currentRoomEvents.stream()
+        List<Event> currentRoomEventsWithSameDate = currentRoomEvents.stream()
                 .filter(ev -> ev.getFrom().getDayOfYear() == event.getFrom().getDayOfYear())
                 .filter(ev -> !event.getFrom().isAfter(ev.getTo()) || event.getFrom().equals(ev.getFrom()))
                 .toList();

@@ -1,8 +1,9 @@
 package com.events.api.web.dto;
 
-import com.events.api.data.entity.EventsEntity;
 import com.events.api.data.entity.RoomsEntity;
 import com.events.api.data.entity.TicketsEntity;
+import com.events.api.domain.model.Event;
+import com.events.api.domain.model.PastEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,7 +28,7 @@ public class EventDTO {
     private String to;
 
     public static EventDTO fromEntity(
-            EventsEntity event,
+            Event event,
             RoomsEntity room,
             List<TicketsEntity> tickets
     ) {
@@ -47,7 +48,7 @@ public class EventDTO {
                 .build();
     }
 
-    public static EventDTO fromPastEvent(PastEventDTO event) {
+    public static EventDTO fromPastEvent(PastEvent event) {
         return EventDTO.builder()
                 .id(event.getId())
                 .name(event.getName())

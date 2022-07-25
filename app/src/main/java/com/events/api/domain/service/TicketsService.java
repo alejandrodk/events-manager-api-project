@@ -1,10 +1,10 @@
 package com.events.api.domain.service;
 
-import com.events.api.data.entity.EventsEntity;
 import com.events.api.data.entity.TicketsEntity;
 import com.events.api.data.repository.TicketsRepository;
 import com.events.api.data.entity.RoomsEntity;
 import com.events.api.data.entity.UsersEntity;
+import com.events.api.domain.model.Event;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,7 +40,7 @@ public class TicketsService {
     }
 
     public void validateAvailability(TicketsEntity ticket) {
-        EventsEntity event = this.eventsService.get(ticket.getEventId())
+        Event event = this.eventsService.get(ticket.getEventId())
                 .orElseThrow(() -> new RuntimeException("Event not found"));
 
         RoomsEntity room = this.eventsService.getEventRoom(event.getRoom())

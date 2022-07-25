@@ -1,7 +1,7 @@
 package com.events.api.domain.task;
 
 import com.events.api.data.cache.EventsCache;
-import com.events.api.data.entity.EventsEntity;
+import com.events.api.domain.model.Event;
 import com.events.api.domain.service.EventsService;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ public class EventsTasks {
     public void cachingTodayEvents() {
         LocalDateTime from = LocalDateTime.now().withHour(0).withMinute(0);
         LocalDateTime to = LocalDateTime.now().withHour(23).withMinute(59);
-        List<EventsEntity> events = this.eventsService.findBetweenDates(from, to);
+        List<Event> events = this.eventsService.findBetweenDates(from, to);
 
         events.forEach(this.cache::populate);
     }

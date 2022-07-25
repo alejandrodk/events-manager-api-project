@@ -2,9 +2,10 @@ package com.events.api.domain.service;
 
 import com.events.api.data.cache.EventsCache;
 import com.events.api.data.entity.EventsEntity;
-import com.events.api.data.repository.EventsRepository;
 import com.events.api.data.repository.PastEventsRepository;
-import com.events.api.web.dto.PastEventDTO;
+import com.events.api.domain.gateway.EventGateway;
+import com.events.api.domain.model.Event;
+import com.events.api.domain.model.PastEvent;
 import com.events.api.data.entity.RoomsEntity;
 import com.events.api.domain.utils.DateUtils;
 import org.springframework.stereotype.Service;
@@ -16,56 +17,54 @@ import java.util.function.Predicate;
 
 @Service
 public class EventsService {
-    private final EventsRepository repository;
+    private final EventGateway eventGateway;
     private final PastEventsRepository pastEventsRepository;
     private final RoomsService roomsService;
     private final EventsCache cache;
 
-    public EventsService(EventsRepository repository, PastEventsRepository pastEventsRepository, RoomsService roomsService, EventsCache cache) {
-        this.repository = repository;
+    public EventsService(EventGateway eventGateway, PastEventsRepository pastEventsRepository, RoomsService roomsService, EventsCache cache) {
+        this.eventGateway = eventGateway;
         this.pastEventsRepository = pastEventsRepository;
         this.roomsService = roomsService;
         this.cache = cache;
     }
 
-    public EventsEntity create(EventsEntity event) {
+    public Event create(Event event) {
         RoomsEntity room = this.getEventRoom(event.getRoom())
                 .orElseThrow(() -> new RuntimeException("Room not found"));
-        List<EventsEntity> currentRoomEvents = this.listByRoom(event.getRoom());
+        List<Event> currentRoomEvents = this.listByRoom(event.getRoom());
 
         boolean available = this.roomsService.validateAvailability(event, room, currentRoomEvents);
 
         if (!available) throw new RuntimeException("Room is not available");
-        EventsEntity result = this.repository.save(event);
+        Event result = this.eventGateway.save(event);
         return this.cache.populate(result);
     }
 
-    public List<PastEventDTO> savePastEvents(List<PastEventDTO> events) {
+    public List<PastEvent> savePastEvents(List<PastEvent> events) {
         return this.pastEventsRepository.saveAll(events);
     }
 
-    public List<PastEventDTO> getPastEvents() {
+    public List<PastEvent> getPastEvents() {
         return this.pastEventsRepository.findAll();
     }
 
-    public Optional<EventsEntity> get(int event) {
-        EventsEntity cached = this.cache.get(event);
+    public Optional<Event> get(int event) {
+        Event cached = this.cache.get(event);
         if (cached != null) return Optional.of(cached);
-        return this.repository.findById(event);
+        return this.eventGateway.findById(event);
     }
 
-    public List<EventsEntity> list(String date) {
-        return this.repository.findAll().stream()
-                .filter(this.getFilterByParam(date))
-                .toList();
+    public List<Event> list(String date) {
+        return this.eventGateway.listByFilter(this.getFilterByParam(date));
     }
 
-    public List<EventsEntity> findBetweenDates(LocalDateTime from, LocalDateTime to) {
-        return this.repository.findBetweenDates(from, to);
+    public List<Event> findBetweenDates(LocalDateTime from, LocalDateTime to) {
+        return this.eventGateway.listBetweenDates(from, to);
     }
 
-    public List<EventsEntity> listByRoom(int room) {
-        return this.repository.findByRoom(room);
+    public List<Event> listByRoom(int room) {
+        return this.eventGateway.listByRoom(room);
     }
     public Optional<RoomsEntity> getEventRoom(int roomId) {
         return this.roomsService.get(roomId);

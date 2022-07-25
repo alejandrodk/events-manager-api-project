@@ -1,6 +1,8 @@
 package com.events.api.web.controller;
 
 import com.events.api.data.entity.EventsEntity;
+import com.events.api.domain.model.Event;
+import com.events.api.domain.model.PastEvent;
 import com.events.api.domain.service.EventsService;
 import com.events.api.web.dto.EventDTO;
 import com.events.api.web.dto.PastEventDTO;
@@ -34,13 +36,13 @@ public class EventsController {
     }
 
     @PostMapping("/events")
-    public EventsEntity create(@RequestBody EventsEntity dto) {
-        EventsEntity entity = ModelMapperUtils.mapToClass(dto, EventsEntity.class);
+    public Event create(@RequestBody EventsEntity dto) {
+        Event entity = ModelMapperUtils.mapToClass(dto, Event.class);
         return this.service.create(entity);
     }
 
     @PutMapping("/events/{event}")
-    public EventsEntity update(@PathVariable("event") @NotNull int event) {
+    public Event update(@PathVariable("event") @NotNull int event) {
         return this.service.get(event).orElseThrow(() -> new RuntimeException("event not found"));
     }
 
@@ -49,7 +51,7 @@ public class EventsController {
         if (date.isPresent() && date.get().equals("past")) {
             return this.service.getPastEvents().stream().map(EventDTO::fromPastEvent).toList();
         }
-        List<EventsEntity> result = this.service.list(date.orElse(""));
+        List<Event> result = this.service.list(date.orElse(""));
         return result.stream().map(event -> {
             RoomsEntity room = this.roomsService.get(event.getRoom()).get();
             List<TicketsEntity> tickets = this.ticketsService.findByEvent(event.getId());
@@ -60,13 +62,13 @@ public class EventsController {
 
     @PostMapping("/batch/events")
     public List<PastEventDTO> batch() {
-        List<EventsEntity> events = this.service.list("past");
-        List<PastEventDTO> pastEvents = events.stream().map(event -> {
+        List<Event> events = this.service.list("past");
+        List<PastEvent> pastEvents = events.stream().map(event -> {
             RoomsEntity room = this.roomsService.get(event.getRoom()).get();
             List<TicketsEntity> tickets = this.ticketsService.findByEvent(event.getId());
-            return PastEventDTO.fromEntity(event, room, tickets);
+            return PastEvent.fromEntity(event, room, tickets);
         }).toList();
 
-        return this.service.savePastEvents(pastEvents);
+        return this.service.savePastEvents(pastEvents).stream().map(PastEventDTO::fromModel).toList();
     }
 }

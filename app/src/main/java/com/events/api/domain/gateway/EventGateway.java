@@ -33,13 +33,13 @@ public class EventGateway {
         return this.eventsRepository.findById(eventId).map(this::toModel);
     }
 
-//    public List<PastEvent> savePastEvents(List<PastEvent> events) {
-//        return this.pastEventsRepository.saveAll(events);
-//    }
+    public List<PastEvent> savePastEvents(List<PastEvent> events) {
+        return this.pastEventsRepository.saveAll(events);
+    }
 
-//    public List<PastEvent> getPastEvents() {
-//        return this.pastEventsRepository.findAll();
-//    }
+    public List<PastEvent> getPastEvents() {
+        return this.pastEventsRepository.findAll();
+    }
 
     public List<Event> listByFilter(Predicate<EventsEntity> filter) {
         return this.eventsRepository.findAll().stream()
