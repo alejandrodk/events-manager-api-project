@@ -3,6 +3,7 @@ package com.events.api.domain.task;
 import com.events.api.data.cache.EventsCache;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.service.EventsService;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
+@EnableScheduling
 public class EventsTasks {
     private final EventsService eventsService;
     private final EventsCache cache;
