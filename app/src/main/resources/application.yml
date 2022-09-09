@@ -21,3 +21,6 @@ spring:
     mongodb:
       uri: mongodb://root:root@localhost:27018/?authSource=admin
       database: events_api
+springdoc:
+  swagger-ui:
+    path: /api

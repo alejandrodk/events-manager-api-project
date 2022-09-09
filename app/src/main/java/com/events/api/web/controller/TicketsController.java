@@ -2,6 +2,7 @@ package com.events.api.web.controller;
 
 import com.events.api.domain.model.Ticket;
 import com.events.api.domain.service.TicketsService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -15,6 +16,7 @@ public class TicketsController {
     }
 
     @GetMapping("/tickets/ping")
+    @Operation(summary = "health check endpoint")
     public String ping() {
         return "pong";
     }

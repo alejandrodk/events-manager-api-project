@@ -6,6 +6,13 @@
     [x] tickets service
     [x] rooms service
     [] events service
+[x] Swagger (Open api 3)
+[] DTOS + interfaces
+    [] users
+    [] tickets
+    [] rooms
+    [] events
+[] Response Entity en controllers
 [] Tests integracion
     [] users controller
     [] tickets controller
@@ -22,12 +29,6 @@
     [] rooms
     [] events
     [] ajustar en tests
-[] DTOS + Swagger
-    [] users
-    [] tickets
-    [] rooms
-    [] events
-[] Response Entity en controllers
 [] Static imports
 [] Clean code + Prog. Funcional
 [x] Gateways
