@@ -41,7 +41,7 @@ public class EventsController {
         return this.service.create(entity);
     }
 
-    @PutMapping("/events/{event}")
+    @GetMapping("/events/{event}")
     public Event update(@PathVariable("event") @NotNull int event) {
         return this.service.get(event).orElseThrow(() -> new RuntimeException("event not found"));
     }
