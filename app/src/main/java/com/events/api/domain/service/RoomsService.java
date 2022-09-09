@@ -51,9 +51,14 @@ public class RoomsService {
         LocalTime close = room.getClose().toLocalTime();
 
         List<Event> currentRoomEventsWithSameDate = currentRoomEvents.stream()
-                .filter(ev -> ev.getFrom().getDayOfYear() == event.getFrom().getDayOfYear())
-                .filter(ev -> !event.getFrom().isAfter(ev.getTo()) || event.getFrom().equals(ev.getFrom()))
-                .toList();
+                .filter(currentEvent ->
+                                (currentEvent.getFrom().getYear() == event.getFrom().getYear()) &&
+                                (currentEvent.getFrom().getDayOfYear() == event.getFrom().getDayOfYear())
+                        )
+                .filter(currentEvent ->
+                        !event.getFrom().isAfter(currentEvent.getTo()) ||
+                        event.getFrom().equals(currentEvent.getFrom())
+                ).toList();
 
         if (currentRoomEventsWithSameDate.size() > 0) return false;
 
