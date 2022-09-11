@@ -12,7 +12,8 @@
     [] tickets
     [] rooms
     [] events
-[] Response Entity en controllers
+[x] Response Entity en controllers
+[] Global error handler en controllers
 [] Flyweight
 [] Tests integracion
     [] users controller

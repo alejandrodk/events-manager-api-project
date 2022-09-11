@@ -12,6 +12,8 @@ import com.events.api.domain.service.RoomsService;
 import com.events.api.domain.service.TicketsService;
 import com.events.api.domain.utils.ModelMapperUtils;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
@@ -33,41 +35,46 @@ public class EventsController {
 
     @GetMapping("/events/ping")
     @Operation(summary = "health check endpoint")
-    public String ping() {
-        return "pong";
+    public ResponseEntity<String> ping() {
+        return ResponseEntity.ok("pong");
     }
 
     @PostMapping("/events")
     @Operation(summary = "create a new event")
-    public Event create(@RequestBody EventsEntity dto) {
+    public ResponseEntity<Event> create(@RequestBody EventsEntity dto) {
         Event entity = ModelMapperUtils.mapToClass(dto, Event.class);
-        return this.service.create(entity);
+        Event result = this.service.create(entity);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping("/events/{event}")
     @Operation(summary = "get a single event by id")
-    public Event update(@PathVariable("event") @NotNull int event) {
-        return this.service.get(event).orElseThrow(() -> new RuntimeException("event not found"));
+    public ResponseEntity<Event> update(@PathVariable("event") @NotNull int event) {
+        Event result = this.service.get(event).orElseThrow(() -> new RuntimeException("event not found"));
+        return ResponseEntity.ok(result);
     }
 
     @GetMapping("/events")
     @Operation(summary = "get a list of events")
-    public List<EventDTO> list(@RequestParam(value = "date") Optional<String> date) {
+    public ResponseEntity<List<EventDTO>> list(@RequestParam(value = "date") Optional<String> date) {
         if (date.isPresent() && date.get().equals("past")) {
-            return this.service.getPastEvents().stream().map(EventDTO::fromPastEvent).toList();
+            List<EventDTO> result = this.service.getPastEvents().stream().map(EventDTO::fromPastEvent).toList();
+            return ResponseEntity.ok(result);
         }
-        List<Event> result = this.service.list(date.orElse(""));
-        return result.stream().map(event -> {
+        List<Event> events = this.service.list(date.orElse(""));
+        List<EventDTO> result = events.stream().map(event -> {
             Room room = this.roomsService.get(event.getRoom()).get();
             List<Ticket> tickets = this.ticketsService.findByEvent(event.getId());
 
             return EventDTO.fromEntity(event, room, tickets);
         }).toList();
+
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/batch/events")
     @Operation(summary = "migrate past events to mongodb")
-    public List<PastEventDTO> batch() {
+    public ResponseEntity<List<PastEventDTO>> batch() {
         List<Event> events = this.service.list("past");
         List<PastEvent> pastEvents = events.stream().map(event -> {
             Room room = this.roomsService.get(event.getRoom()).get();
@@ -75,6 +82,7 @@ public class EventsController {
             return PastEvent.fromEntity(event, room, tickets);
         }).toList();
 
-        return this.service.savePastEvents(pastEvents).stream().map(PastEventDTO::fromModel).toList();
+        List<PastEventDTO> result = this.service.savePastEvents(pastEvents).stream().map(PastEventDTO::fromModel).toList();
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 }
