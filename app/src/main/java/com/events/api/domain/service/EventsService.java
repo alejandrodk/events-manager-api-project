@@ -2,7 +2,6 @@ package com.events.api.domain.service;
 
 import com.events.api.data.cache.EventsCache;
 import com.events.api.data.entity.EventsEntity;
-import com.events.api.data.repository.PastEventsRepository;
 import com.events.api.domain.gateway.EventGateway;
 import com.events.api.domain.model.Event;
 import com.events.api.domain.model.PastEvent;
@@ -18,13 +17,11 @@ import java.util.function.Predicate;
 @Service
 public class EventsService {
     private final EventGateway eventGateway;
-    private final PastEventsRepository pastEventsRepository;
     private final RoomsService roomsService;
     private final EventsCache cache;
 
-    public EventsService(EventGateway eventGateway, PastEventsRepository pastEventsRepository, RoomsService roomsService, EventsCache cache) {
+    public EventsService(EventGateway eventGateway, RoomsService roomsService, EventsCache cache) {
         this.eventGateway = eventGateway;
-        this.pastEventsRepository = pastEventsRepository;
         this.roomsService = roomsService;
         this.cache = cache;
     }
@@ -42,11 +39,11 @@ public class EventsService {
     }
 
     public List<PastEvent> savePastEvents(List<PastEvent> events) {
-        return this.pastEventsRepository.saveAll(events);
+        return this.eventGateway.savePastEvents(events);
     }
 
     public List<PastEvent> getPastEvents() {
-        return this.pastEventsRepository.findAll();
+        return this.eventGateway.getPastEvents();
     }
 
     public Optional<Event> get(int event) {

@@ -1,11 +1,11 @@
 # TODO
 
-[] Tests unitarios
+[x] Tests unitarios
     [x] utils
     [x] users service
     [x] tickets service
     [x] rooms service
-    [] events service
+    [x] events service
 [x] Swagger (Open api 3)
 [] DTOS + interfaces
     [] users
@@ -13,6 +13,7 @@
     [] rooms
     [] events
 [] Response Entity en controllers
+[] Flyweight
 [] Tests integracion
     [] users controller
     [] tickets controller
@@ -39,4 +40,3 @@
 [] enums
 [x] inyectar propiedades + props en app.yml
 [x] remover enable decorators
-[] Flyweight
